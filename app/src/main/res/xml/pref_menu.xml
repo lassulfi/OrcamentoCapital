@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="@string/low_rate_key"
+        android:title="@string/low_rate_title"
+        android:defaultValue="@string/low_rate_default_value"
+        android:dialogTitle="@string/low_rate_dialog_title"/>
+
+    <EditTextPreference
+        android:key="@string/high_rate_key"
+        android:title="@string/high_rate_title"
+        android:defaultValue="@string/high_rate_default_value"
+        android:dialogTitle="@string/high_rate_dialog_title"/>
+
+    <EditTextPreference
+        android:key="@string/max_iterations_key"
+        android:title="@string/max_iterations_title"
+        android:defaultValue="@string/max_iterations_default_value"
+        android:dialogTitle="@string/max_iterations_dialog_title"/>
+
+    <EditTextPreference
+        android:key="@string/req_precision_key"
+        android:title="@string/req_precision_title"
+        android:defaultValue="@string/reg_precision_default_value"
+        android:dialogTitle="@string/reg_precision_dialog_title"/>
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/calculate_tirm"
+        android:key="@string/calculate_tirm_key"
+        android:summaryOff="@string/calculate_tirm_summaryoff"
+        android:summaryOn="@string/calculate_tirm_summaryon"
+        android:title="@string/calculate_tirm_title"/>
+
+    <!-- TODO: Implementar opções de moeda -->
+    <ListPreference android:key="@string/pref_currency_key"
+        android:title="@string/pref_currency_title"
+        android:defaultValue="@string/pref_currency_default_value"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"/>
+
+    <ListPreference
+        android:defaultValue="@string/pref_period_month_value"
+        android:title="@string/pref_period_label"
+        android:key="@string/pref_period_key"
+        android:entries="@array/pref_period_option_labels"
+        android:entryValues="@array/pref_period_option_values"/>
+</PreferenceScreen>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="pref_period_option_labels">
+        <item>@string/pref_period_label_day</item>
+        <item>@string/pref_period_label_month</item>
+        <item>@string/pref_period_label_years</item>
+    </array>
+
+    <array name="pref_period_option_values">
+        <item>@string/pref_period_day_value</item>
+        <item>@string/pref_period_month_value</item>
+        <item>@string/pref_period_year_value</item>
+    </array>
+
+</resources>

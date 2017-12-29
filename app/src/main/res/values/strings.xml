@@ -1,0 +1,197 @@
+<resources>
+
+    <string name="app_name">Orçamento de Capital</string>
+    <string name="action_settings">Preferências</string>
+    <string name="action_glossary">Glossário</string>
+
+    <!-- activity_main.xml strings -->
+    <string name="tv_nome_projeto">Projeto A</string>
+    <string name="tv_vpl">VPL:</string>
+    <string name="tv_tir">TIR:</string>
+    <string name="tv_payback">Payback:</string>
+    <string name="btn_calcular">Calcular</string>
+    <string name="tv_empty_view">Nenhum fluxo de caixa</string>
+    <string name="tv_vpl_result">VPL:</string>
+    <string name="tv_payback_result">Payback:</string>
+    <string name="tv_payback_result_period">anos</string>
+    <string name="tv_tir_result_start">TIR:</string>
+    <string name="tv_tirm_result_start">TIRM:</string>
+    <string name="tv_tirm_result_end">%</string>
+    <string name="tv_tir_result_end">%</string>
+    <string name="tv_rrate_start">T.R.</string>
+    <string name="tv_frate_start">T.F.</string>
+    <string name="tv_rrate_end">%</string>
+    <string name="tv_frate_end">%</string>
+    <string name="invalid_cash_flow_arraylist_size">Não é possível calcular Payback. Informe mais
+        valores de fluxo de caixa</string>
+
+    <!-- list_item.xml strings -->
+    <string name="periodo_subtitle_string">Período</string>
+    <string name="periodo_value">0</string>
+    <string name="fluxo_caixa_subtitle">Fluxo de Caixa</string>
+    <string name="fluxo_caixa_value">R$ - 42.000,00</string>
+
+    <!-- MainActivity Project Name AlertDialog -->
+    <string name="project_dialog_title">Projeto</string>
+    <string name="project_dialog_message">Informe o nome do Projeto</string>
+    <string name="project_dialog_positive_button">OK</string>
+    <string name="project_dialog_negative_button">Cancelar</string>
+
+    <!-- MainActivity showDeleteItemFromListViewAlert method -->
+    <string name="delete_cash_flow_title_alert">Fluxo de Caixa</string>
+    <string name="delete_cash_flow_message_alert">Excluir o fluxo de caixa desse projeto?</string>
+    <string name="delete_cash_flow_positive_button">Sim</string>
+    <string name="delete_cash_flow_negative_button">Não</string>
+
+    <!-- MainActivity showAddChashFlowAlertDialog -->
+    <string name="add_cash_flow_message_alert">Valor do fluxo de caixa:</string>
+
+    <!-- MainActivity showRRateAlertDialog -->
+    <string name="show_add_rr_alert_dialog_title">Taxa de reinvestimento</string>
+    <string name="show_add_rr_alert_dialog_message">Informe a taxa de reinvestimento</string>
+
+    <!-- MainActivity showFRateAlertDialog -->
+    <string name="show_add_fr_alert_dialog_title">Taxa de financiamento</string>
+    <string name="show_add_fr_alert_dialog_message">Informe a taxa de financiamento</string>
+
+    <!-- Toast Messages -->
+    <string name="invalid_project_name_toast">Nome inválido</string>
+    <string name="empty_arraylist_toast">Informe um fluxo de caixa</string>
+    <string name="pref_low_rate_toast_message">Informe um valor entre 0.01 e 0.20</string>
+    <string name="pref_high_rate_toast_message">Informe um valor entre 0.40 e 1.00</string>
+    <string name="pref_max_iterations_toast_message">Informe um valor entre 1 e 10000</string>
+    <string name="pref_req_precision_toast_message">Informe um valor entre 0.1 e 1E-15</string>
+    <string name="error_calculate_tirm">Erro ao calcular a TIR Modificada</string>
+
+    <!-- menu_main.xml-->
+    <string name="action_delete_cash_flow">Apagar FC</string>
+    <string name="action_show_preferences_fragment">Preferências</string>
+    <string name="action_show_glossary">Glossário</string>
+
+    <!--navigation_drawer.xml-->
+    <string-array name="navigation_drawer_options">
+        <item>Preferências</item>
+        <item>Glossário</item>
+        <item>Sobre</item>
+    </string-array>
+    <string name="drawer_open">Gaveta de navegação aberta</string>
+    <string name="drawer_close">Gaveta de navegação fechada</string>
+
+    <!-- preferences keys and strings -->
+    <string name="low_rate_key" translatable="false">low_rate</string>
+    <string name="low_rate_title">Taxa mínima</string>
+    <string name="low_rate_default_value" format="float">0.01</string>
+    <string name="low_rate_summary">Taxa mínima para cálculo da TIR</string>
+    <string name="low_rate_dialog_title">Taxa mínima da TIR</string>
+
+    <string name="high_rate_key" translatable="false">high_rate</string>
+    <string name="high_rate_title">Taxa máxima</string>
+    <string name="high_rate_default_value">0.50</string>
+    <string name="high_rate_summary">Taxa máxima para cálculo da TIR</string>
+    <string name="high_rate_dialog_title">Taxa máxima da TIR</string>
+
+    <string name="max_iterations_key" translatable="false">max_iterations</string>
+    <string name="max_iterations_title">Iterações</string>
+    <string name="max_iterations_default_value">1000</string>
+    <string name="max_iterations_summary">Número máximo de iterações</string>
+    <string name="max_iterations_dialog_title">Número máximo de iterações</string>
+
+    <string name="req_precision_key" translatable="false">required_precision</string>
+    <string name="req_precision_title">Precisão</string>
+    <string name="reg_precision_default_value">0.00000001</string>
+    <string name="reg_precision_summary">Precisão máxima para cálculo da TIR</string>
+    <string name="reg_precision_dialog_title">Precisão máxima para cálculo da TIR</string>
+
+    <string name="calculate_tirm_key" translatable="false">tirm_key</string>
+    <string name="calculate_tirm_title">TIR Modificada</string>
+    <string name="calculate_tirm_summaryoff">Não calcular</string>
+    <string name="calculate_tirm_summaryon">Calcular</string>
+    
+    <string name="pref_currency_key" translatable="false">currency key</string>
+    <string name="pref_currency_title">Moeda</string>
+    <string name="pref_currency_default_value">R$</string>
+    <string name="pref_currency_sdk_version_error">Sua versão do android não suporta a opção moedas</string>
+    <string name="pref_currency_invalid_currency">Não é possível recuperar as moedas disponíveis</string>
+
+    <string name="pref_period_title">Período</string>
+
+    <!-- Labels for period -->
+    <string name="pref_period_label">Período</string>
+    <string name="pref_period_label_day">Dias</string>
+    <string name="pref_period_label_month">Meses</string>
+    <string name="pref_period_label_years">Anos</string>
+
+    <!-- Keys for periods -->
+    <string name="pref_period_key" translatable="false">period key</string>
+    <string name="pref_period_day_value" translatable="false">dias</string>
+    <string name="pref_period_month_value" translatable="false">meses</string>
+    <string name="pref_period_year_value" translatable="false">anos</string>
+
+    <string name="invalid_type">Tipo inválido</string>
+
+    <!-- VPL Fragment -->
+    <string name="vpl_title_textview">VPL</string>
+    <string name="vpl_text_textview">VPL – Valor Presente Líquido é a diferença entre o valor de
+        mercado de um investimento e o seu custo.\n\nÉ uma técnica sofisticada de avaliação.\n\n
+        A técnica do VPL – Valor Presente Líquido considera o valor do dinheiro no tempo.\n\n
+        Desconta os fluxos de caixa do projeto a uma taxa, que consiste no retorno mínimo que um
+        projeto precisa oferecer para ser considerado.\n\nVPL é igual ao valor presente dos
+        fluxos de caixa gerado pelo projeto, descontado pela taxa, menos o investimento inicial do
+        projeto.\n\nNa técnica do VPL, tanto as entradas quanto as saídas de caixa são medidas
+        em valores monetários.\n\nCritério de Decisão:\n\n– Se o VPL for positivo, aceitar o projeto
+        \n– Se o VPL for negativo, rejeitar o projeto.
+    </string>
+
+    <!-- TIR Fragment -->
+    <string name="tir_title_textview">TIR</string>
+    <string name="tir_text_textview">A TIR – taxa interna de retorno (IRR – Internal Rate of
+        Return) tem estreita relação com o VPL.\nTentamos encontrar uma taxa única de retorno que
+        resuma os resultados de um projeto.\nA TIR – taxa interna de retorno (IRR – Internal Rate of
+        Return) consiste na taxa de desconto que faz com que valor presente dos fluxos de caixa
+        gerado pelo projeto, descontado por esta taxa, menos o investimento inicial do projeto seja
+        igual a zero.\n\nEm outras palavras, é a taxa i que faz com que o VPL seja zero!\n
+        Critério de Decisão:\n– Se TIR for maior do que custo de capital, aceitar o projeto\n
+        – Se TIR for menor do que custo de capital, rejeita o projeto.\nProjetos Independentes:
+        \n– Se a TIR exceder o custo de capital, o projeto deve ser aceito.\nProjetos mutuamente
+        exclusivos:\n– Aceitar o projeto mutuamente exclusivo com a maior TIR.</string>
+
+    <!-- Payback Fragment -->
+    <string name="payback_title_textview">Payback</string>
+    <string name="payback_text_textview">É o cálculo do tempo necessário para que um investimento
+        gere fluxos de caixa suficientes para recuperar o capital inicial.\n\nPara o payback, um
+        investimento é aceitável se o período calculado for menor do que um número exigido,
+        o investimento é aceito.\n\nDeficiências:\nPayback é calculado pela soma dos fluxos futuros
+        – Valor do dinheiro no tempo é totalmente ignorado.\nNão considera diferenças de riscos:
+        o método é o mesmo para projetos muito arriscados e projetos conservadores.\n– Ignora
+        totalmente os fluxos futuros após o repagamento.\n\nUtilização:\n– Apesar das desvantagens,
+        é utilizada por empresas grandes e sofisticadas para analisar projetos de menor importância.
+        \n- Atende projetos de curto prazo.\nInvestimentos com retornos rápidos provavelmente tem
+        VPL positivo.
+    </string>
+
+    <!-- TIRM Fragment -->
+    <string name="tirm_title_textview">TIRM</string>
+    <string name="tirm_text_textview">Usa-se a TIRM para buscar resolver alguns dos problemas
+        da TIR.\nA proposta é de modificar o fluxo de caixa e depois calcular a TIR sobre o fluxo
+        de caixa modificado.\nTIRM tem como propriedade uma única resposta.\nExistem maneiras
+        diversas de calcular: Não existe motivo evidente para escolher um deles.\nPara projetos
+        independentes VPL, TIR e TIRM sempre chegam a mesma conclusão.\nPara projetos mutuamente
+        exclusivos e com tamanhos diferentes, podem aparecer conflitos.</string>
+
+    <!-- Outros Fragment -->
+    <string name="outros_title_textview">Outras definições</string>
+    <string name="taxa_financiamento_textview">T.F.: É a taxa de financiamento. A taxa de financiamento
+        é a taxa que desconta os fluxos negativos e traz para valor presente. Pode-se utilizar a
+        TMA (taxa mínima de atratividade, mas a grande vantagem é de poder utilizar o custo do
+        capital de terceiros da empresa em questão, considerando a hipótese de quando os fluxos de
+        caixa são negativos a empresa possui a necessidade de se financiar. Se fosse de financiamento
+        com capital próprio, a empresa poderia utilizar como taxa de financiamento no cálculo da
+        TIRM o custo do capital próprio.</string>
+    <string name="taxa_reinvestimento_textview">T.R.: É a taxa de reinvestimento. A taxa de reinvestimento
+        é a taxa que leva todos os fluxos de caixa positivos para valor futuro. Neste caso utiliza-se
+        principalmente a TMA – Taxa Mínima de Atratividade. O uso da TMA como taxa de reinvestimentos
+        dos fluxos positivos gerado pelo projeto de investimento elimina a desvantagem da TIR convencional
+        de pressupor a aplicação dos fluxos do projeto à própria TIR, o que costuma ser irreal na
+        prática.</string>
+
+</resources>

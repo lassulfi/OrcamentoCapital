@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_delete_cash_flow"
+        android:title="@string/action_delete_cash_flow"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_show_preferences_fragment"
+        android:title="@string/action_show_preferences_fragment"
+        android:orderInCategory="200"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_show_glossary"
+        android:title="@string/action_show_glossary"
+        android:orderInCategory="300"
+        app:showAsAction="never"/>
+
+</menu>
