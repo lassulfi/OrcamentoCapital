@@ -3,12 +3,16 @@ package com.assulfisoft.oramentodecapital;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -95,9 +99,12 @@ public class MainActivity extends AppCompatActivity implements
     private String mPaybackResult;
 
     //Variáveis para a configuração da gaveta de navegacao
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
     private String[] mNavOptions;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //Configuração da gaveta de navegacao
-        setupNavigationDrawer();
+        setupNavigationDrawer(savedInstanceState);
 
         //Chamada do método para recuperar os valores da SharedPreferences
         setupSharedPreferences();
@@ -302,10 +309,12 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Método para configurar a gaveta de navegação
      */
-    private void setupNavigationDrawer() {
+    private void setupNavigationDrawer(Bundle savedInstanceState) {
 
         //Recupera o StringArray com as opções
         mNavOptions = getResources().getStringArray(R.array.navigation_drawer_options);
+
+        mTitle = mDrawerTitle = getTitle();
 
         //Recupera os componentes da tela
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -315,6 +324,50 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,
                 mNavOptions));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                R.drawable.ic_drawer_white,
+                R.string.drawer_open,
+                R.string.drawer_close){
+            @Override
+            public void onDrawerClosed(View view){
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer_toogle_white);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -679,8 +732,23 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //Se a gaveta de navegação está aberta esconde os itens relacionados com o conteúdo da view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_show_glossary).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_show_preferences_fragment).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_delete_cash_flow).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //A ação home/up da action bar deve abrir ou fechar a gaveta de nagegação
+        //ActionBarDrawerToggle é responável por essa ação
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        //Ações para as demais opções
         switch (item.getItemId()){
             case R.id.action_delete_cash_flow:
                 showDeleteItemFromListViewAlert();
@@ -984,5 +1052,21 @@ public class MainActivity extends AppCompatActivity implements
      * @param postiton posição da ListView clicada
      */
     private void selectItem(int postiton) {
+        switch (postiton){
+            case 0:
+                Intent intent = new Intent(this, GlossaryActivity.class);
+                startActivity(intent);
+                break;
+            case 1:
+                Intent preferencesItent = new Intent(this, SettingsActivity.class);
+                startActivity(preferencesItent);
+                break;
+            default:
+                return;
+        }
+
+        //Atualiza o item selecionado e fecha a gaveta de navegação
+        mDrawerList.setItemChecked(postiton, true);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 }

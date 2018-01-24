@@ -7,7 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- Conteudo principal da tela -->
+
     <ScrollView
+        android:id="@+id/content_frame"
         android:background="@color/colorWhite"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -150,7 +152,6 @@
 
         </android.support.constraint.ConstraintLayout>
 
-
     </ScrollView>
 
     <!-- gaveta de navegacao -->
@@ -160,9 +161,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="@color/colorPrimary"
+        android:divider="@color/colorRed"
+        android:dividerHeight="1dp"
+        android:background="@color/colorWhite"
         ></ListView>
 
 </android.support.v4.widget.DrawerLayout>

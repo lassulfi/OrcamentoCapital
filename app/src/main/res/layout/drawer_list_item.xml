@@ -6,4 +6,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_nav_option"
         tools:text="Item do menu"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:padding="16dp"
         />

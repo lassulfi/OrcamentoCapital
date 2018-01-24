@@ -70,8 +70,8 @@
 
     <!--navigation_drawer.xml-->
     <string-array name="navigation_drawer_options">
-        <item>Preferências</item>
         <item>Glossário</item>
+        <item>Preferências</item>
         <item>Sobre</item>
     </string-array>
     <string name="drawer_open">Gaveta de navegação aberta</string>
