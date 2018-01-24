@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -92,10 +94,18 @@ public class MainActivity extends AppCompatActivity implements
     private String mVPLResult;
     private String mPaybackResult;
 
+    //Variáveis para a configuração da gaveta de navegacao
+    private String[] mNavOptions;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Configuração da gaveta de navegacao
+        setupNavigationDrawer();
 
         //Chamada do método para recuperar os valores da SharedPreferences
         setupSharedPreferences();
@@ -287,6 +297,24 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
+    }
+
+    /**
+     * Método para configurar a gaveta de navegação
+     */
+    private void setupNavigationDrawer() {
+
+        //Recupera o StringArray com as opções
+        mNavOptions = getResources().getStringArray(R.array.navigation_drawer_options);
+
+        //Recupera os componentes da tela
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        //Define o adapter para a ListView
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,
+                mNavOptions));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
     /**
@@ -939,5 +967,22 @@ public class MainActivity extends AppCompatActivity implements
         String frateString = getString(R.string.tv_frate_start) + " " + frate * 100 +
                 " " + getString(R.string.tv_frate_end);
         frateTextView.setText(frateString);
+    }
+
+    /**
+     * Classe que define a ação de clique em um item do menu de navegação
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int postiton, long id) {
+            selectItem(postiton);
+        }
+    }
+
+    /**
+     * Define a ação para cada item, dependendo a posicao
+     * @param postiton posição da ListView clicada
+     */
+    private void selectItem(int postiton) {
     }
 }

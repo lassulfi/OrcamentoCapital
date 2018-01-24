@@ -32,7 +32,7 @@
         android:summaryOn="@string/calculate_tirm_summaryon"
         android:title="@string/calculate_tirm_title"/>
 
-    <!-- TODO: Implementar opções de moeda -->
+    <!-- complete: Implementar opções de moeda -->
     <ListPreference android:key="@string/pref_currency_key"
         android:title="@string/pref_currency_title"
         android:defaultValue="@string/pref_currency_default_value"
