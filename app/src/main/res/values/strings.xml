@@ -54,6 +54,18 @@
     <string name="show_add_fr_alert_dialog_title">Taxa de financiamento</string>
     <string name="show_add_fr_alert_dialog_message">Informe a taxa de financiamento</string>
 
+    <!-- MainActivity createPdfReport -->
+    <string name="cash_flow_subtitle_report">Fluxo de Caixa do Projeto</string>
+    <string name="cash_flow_period_column">Período</string>
+    <string name="cash_flow_value_column">Fluxo de Caixa</string>
+    <string name="title_indicators">Indicadores Financeiros</string>
+    <string name="vpl_text">Valor Presente Líquido (VPL):</string>
+    <string name="tir_text">Taxa Interna de Retorno (TIR):</string>
+    <string name="payback_text">Período de retorno (payback):</string>
+    <string name="open_report_title">Abrir arquivo</string>
+    <string name="pdf_reader_invalid">App para leitura de arquivo formato PDF não encontrado.
+        Faça o download de um app.</string>
+
     <!-- Toast Messages -->
     <string name="invalid_project_name_toast">Nome inválido</string>
     <string name="empty_arraylist_toast">Informe um fluxo de caixa</string>
@@ -62,11 +74,15 @@
     <string name="pref_max_iterations_toast_message">Informe um valor entre 1 e 10000</string>
     <string name="pref_req_precision_toast_message">Informe um valor entre 0.1 e 1E-15</string>
     <string name="error_calculate_tirm">Erro ao calcular a TIR Modificada</string>
+    <string name="generate_report_success">Relatório gerado com sucesso</string>
+    <string name="generate_report_fail">Falha ao gerar o relatório</string>
+    <string name="generate_report_option">Opção indisponível nesta versão</string>
 
     <!-- menu_main.xml-->
     <string name="action_delete_cash_flow">Apagar FC</string>
     <string name="action_show_preferences_fragment">Preferências</string>
     <string name="action_show_glossary">Glossário</string>
+    <string name="action_create_pdf_report">Gerar relatório PDF</string>
 
     <!--navigation_drawer.xml-->
     <string-array name="navigation_drawer_options">

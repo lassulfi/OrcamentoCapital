@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_delete_cash_flow"
-        android:title="@string/action_delete_cash_flow"
         android:orderInCategory="100"
+        android:title="@string/action_delete_cash_flow"
         app:showAsAction="never"/>
 
+    <!--
     <item android:id="@+id/action_show_preferences_fragment"
         android:title="@string/action_show_preferences_fragment"
         android:orderInCategory="200"
@@ -16,5 +17,13 @@
         android:title="@string/action_show_glossary"
         android:orderInCategory="300"
         app:showAsAction="never"/>
+        -->
+
+    <item
+        android:id="@+id/action_generate_pdf_report"
+        android:enabled="false"
+        android:orderInCategory="200"
+        android:title="@string/action_create_pdf_report"
+        app:showAsAction="never" />
 
 </menu>

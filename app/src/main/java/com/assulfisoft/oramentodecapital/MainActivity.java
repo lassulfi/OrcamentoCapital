@@ -1,24 +1,34 @@
 package com.assulfisoft.oramentodecapital;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.graphics.pdf.PdfDocument.PageInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,60 +40,19 @@ import android.widget.Toast;
 import com.assulfisoft.oramentodecapital.adapter.CashFlowAdapter;
 import com.assulfisoft.oramentodecapital.model.CashFlow;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import static android.graphics.pdf.PdfDocument.Page;
 
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //Atributos
-    private TextView projectNameTextView;
-    private TextView vplTextView;
-    private TextView tirTextView;
-    private TextView paybackTextView;
-    private TextView rrateTextView;
-    private TextView frateTextView;
-
-    private ListView cashFlowListView;
-
-    private FloatingActionButton FAB;
-
-    private Button calculateButton;
-
     private final static String LOG_TAG = "preferences";
-
-    private Toast mToast;
-
-    private ArrayList<CashFlow> cashFlowArrayList;
-
-    private CashFlowAdapter cashFlowAdapter;
-
-    //Taxa de retorno inicial para cálculo das iterações
-    private static double LOW_RATE = 0.01;
-
-    //Taxa de retorno máxima adotada para o cálculo das iterações
-    private static double HIGH_RATE = 0.5;
-
-    //Numero máximo de iterações
-    private static int MAX_ITERATION = 1000;
-
-    //Precisão máxima para o cálculo da TIR
-    private static double PRECISION_REQ = 1E-10;
-
-    //Taxa de reinvestimento
-    private static double REINVESTIMENT_RATE = 0.08;
-
-    //Taxa de financiamento
-    private static double FINANCE_RATE = 0.12;
-
-    //Método de cálculo da TIR. Se true calcula a TIRM caso contrário calcula a TIR
-    private static boolean IRR_METHOD = false;
-
-    //String que representa a moeda adotada
-    private static String CURRENCY;
-
-    //String que representa o periodo de tempo selecionado
-    private static String PERIOD;
-
     //String para armazenar os dados que são exibidos
     private static final String PROJECT_NAME = "project name";
     private static final String VPL_RESULT = "vpl result";
@@ -92,7 +61,37 @@ public class MainActivity extends AppCompatActivity implements
     private static final String PAYBACK_RESULT = "payback result";
     private static final String REINVESTIMENT_RATE_STRING = "rrate";
     private static final String FINANCE_RATE_STRING = "frate";
-
+    //Taxa de retorno inicial para cálculo das iterações
+    private static double LOW_RATE = 0.01;
+    //Taxa de retorno máxima adotada para o cálculo das iterações
+    private static double HIGH_RATE = 0.5;
+    //Numero máximo de iterações
+    private static int MAX_ITERATION = 1000;
+    //Precisão máxima para o cálculo da TIR
+    private static double PRECISION_REQ = 1E-10;
+    //Taxa de reinvestimento
+    private static double REINVESTIMENT_RATE = 0.08;
+    //Taxa de financiamento
+    private static double FINANCE_RATE = 0.12;
+    //Método de cálculo da TIR. Se true calcula a TIRM caso contrário calcula a TIR
+    private static boolean IRR_METHOD = false;
+    //String que representa a moeda adotada
+    private static String CURRENCY;
+    //String que representa o periodo de tempo selecionado
+    private static String PERIOD;
+    //Atributos
+    private TextView projectNameTextView;
+    private TextView vplTextView;
+    private TextView tirTextView;
+    private TextView paybackTextView;
+    private TextView rrateTextView;
+    private TextView frateTextView;
+    private ListView cashFlowListView;
+    private FloatingActionButton FAB;
+    private Button calculateButton;
+    private Toast mToast;
+    private ArrayList<CashFlow> cashFlowArrayList;
+    private CashFlowAdapter cashFlowAdapter;
     //Variáveis para armazenar os resultados do cálculo de VPL e payback para que seja possível
     //atualizar as textviews com o cálculo
     private String mVPLResult;
@@ -274,8 +273,8 @@ public class MainActivity extends AppCompatActivity implements
                 //valida se a listView não está vazia
                 if (!cashFlowArrayList.isEmpty() && validCashFlow){
                     //Chamada do método para o cálculo do VPL
-                    //Recupera a taxa de rendimento padrão - adotado 5%
-                    double rate = 0.05;
+                    //Recupera a taxa de rendimento padrão
+                    double rate = getRates(rrateTextView.getText().toString());
                     //Converte o valor para String e formata com 2 casas decimais
                     mVPLResult = String.format("%.2f",calculateVLP(cashFlowArrayList,rate));
                     //Retorna o valor para a vplTextView
@@ -294,7 +293,9 @@ public class MainActivity extends AppCompatActivity implements
                                 + tirString + " " + getString(R.string.tv_tir_result_end));
                     } else {
                         //Cálculo da TIRM
-                        String tirmString = String.format("%.2f", calculateModifiedTIR(cashFlowArrayList) * 100);
+                        double rrate = getRates(rrateTextView.getText().toString());
+                        double frate = getRates(frateTextView.getText().toString());
+                        String tirmString = String.format("%.2f", calculateModifiedTIR(cashFlowArrayList, rrate, frate) * 100);
                         tirTextView.setText(getString(R.string.tv_tirm_result_start) + " " +
                                 tirmString + " " + getString(R.string.tv_tirm_result_end));
                     }
@@ -322,7 +323,37 @@ public class MainActivity extends AppCompatActivity implements
 
         //Define o adapter para a ListView
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,
-                mNavOptions));
+                mNavOptions) {
+
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view;
+
+                if (position == mNavOptions.length - 1) {
+                    tv.setTextColor(Color.GRAY);
+                }
+
+                return view;
+            }
+
+            @Override
+            public boolean areAllItemsEnabled() {
+                return false;
+            }
+
+            @Override
+            public boolean isEnabled(int position) {
+                //Desabilita o ultimo item - Sobre
+                if (position == mNavOptions.length - 1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        });
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
@@ -670,9 +701,12 @@ public class MainActivity extends AppCompatActivity implements
      * Ref.:https://www.sumproduct.com/thought/modified-internal-rate-of-return-revisited
      *
      * @param list Arraylist de CashFlow contendo o fluxo de caixa real do projeto
+     * @param rrate valor da taxa de reinvestimento (double)
+     * @param frate valor da taxa de financimento (double)
+     *
      * @return taxa interna de retorno modificada double
      */
-    private double calculateModifiedTIR(ArrayList<CashFlow> list){
+    private double calculateModifiedTIR(ArrayList<CashFlow> list, double rrate, double frate) {
 
         //Cria duas arraylists, uma contendo apenas valores positivos e outra contendo apenas
         //valores negativos
@@ -701,13 +735,13 @@ public class MainActivity extends AppCompatActivity implements
         }
          try {
              //Calculo da VPL para os fluxos de caixa positivo e negativo, respectivamente
-             double positiveVPL = calculateVLP(positiveCashFlowList,REINVESTIMENT_RATE);
-             double negativeVPL = calculateVLP(negativeCashFlowList,FINANCE_RATE);
+             double positiveVPL = calculateVLP(positiveCashFlowList, rrate);
+             double negativeVPL = calculateVLP(negativeCashFlowList, frate);
 
              int numberOfPeriods = list.size();
-             double futureRate = Math.pow((1 + REINVESTIMENT_RATE), numberOfPeriods);
+             double futureRate = Math.pow((1 + rrate), numberOfPeriods);
              double dividendo = -1 * positiveVPL * futureRate;
-             double divisor = negativeVPL * (1 + FINANCE_RATE);
+             double divisor = negativeVPL * (1 + frate);
              double factor = 1.0 / ((double) numberOfPeriods - 1.0);
 
              double tirm = Math.pow(dividendo / divisor, factor);
@@ -735,12 +769,11 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
         //Se a gaveta de navegação está aberta esconde os itens relacionados com o conteúdo da view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_show_glossary).setVisible(!drawerOpen);
-        menu.findItem(R.id.action_show_preferences_fragment).setVisible(!drawerOpen);
         menu.findItem(R.id.action_delete_cash_flow).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //A ação home/up da action bar deve abrir ou fechar a gaveta de nagegação
@@ -753,15 +786,120 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_delete_cash_flow:
                 showDeleteItemFromListViewAlert();
                 return true;
-            case R.id.action_show_preferences_fragment:
-                Intent preferencesItent = new Intent(this, SettingsActivity.class);
-                startActivity(preferencesItent);
+            case R.id.action_generate_pdf_report:
+                showToast(getString(R.string.generate_report_option));
+                //createPdfReport();
                 return true;
-            case R.id.action_show_glossary:
-                Intent intent = new Intent(this, GlossaryActivity.class);
-                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Cria um relatório PDF do projeto atual
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void createPdfReport() {
+
+        try {
+            //Cria uma isntancia do objeto PdfDocument
+            PdfDocument document = new PdfDocument();
+
+            //Cria um página
+            PageInfo pageInfo = new PageInfo.Builder(210, 291, 1).create();
+
+            //Inicia a página
+            Page page = document.startPage(pageInfo);
+
+            Canvas canvas = page.getCanvas();
+            Paint projectTitle = new Paint();
+            projectTitle.setColor(getResources().getColor(R.color.textColorBlue));
+            canvas.drawText(projectNameTextView.getText().toString(), 50.0f, 50.0f, projectTitle);
+
+            Paint subTitle = new Paint();
+            subTitle.setColor(getResources().getColor(R.color.colorBlack));
+            String cashFlowSubtitle = getString(R.string.cash_flow_subtitle_report);
+            canvas.drawText(cashFlowSubtitle, 50.0f, 75.0f, subTitle);
+
+            Paint text = new Paint();
+            text.setColor(getResources().getColor(R.color.colorBlack));
+
+            int listIndex = 0;
+            String periodColumn = getString(R.string.cash_flow_period_column);
+            canvas.drawText(periodColumn, 50.0f, 100.0f, text);
+            String valueColumn = getString(R.string.cash_flow_value_column);
+            canvas.drawText(valueColumn, 125.0f, 100.0f, text);
+            for (CashFlow cashFlow : cashFlowArrayList) {
+                listIndex++;
+                String periodValue = String.valueOf(cashFlow.getPeriod());
+                canvas.drawText(periodValue, 50.0f, 105.0f * ((float) listIndex), text);
+                String cashFlowValue = String.format("%.2f", cashFlow.getCash());
+                cashFlowValue = CURRENCY + " " + cashFlowValue;
+                canvas.drawText(cashFlowValue, 125.0f, 105.0f * ((float) listIndex), text);
+            }
+
+            String indicatorsTitle = getString(R.string.title_indicators);
+            float indicatorsPosition = 105.0f * ((float) listIndex) + 20.0f;
+            canvas.drawText(indicatorsTitle, 50.0f, indicatorsPosition, subTitle);
+
+            String vplText = getString(R.string.vpl_text);
+            canvas.drawText(vplText, 50.0f, indicatorsPosition + 20.0f, text);
+            canvas.drawText(vplTextView.getText().toString(), 150.0f, indicatorsPosition + 20.0f,
+                    text);
+
+            String tirText = getString(R.string.tir_text);
+            canvas.drawText(tirText, 50.0f, indicatorsPosition + 40.0f, text);
+            canvas.drawText(tirTextView.getText().toString(), 150.0f, indicatorsPosition + 40.0f,
+                    text);
+
+            String paybackText = getString(R.string.payback_text);
+            canvas.drawText(paybackText, 50.0f, indicatorsPosition + 60.0f, text);
+            canvas.drawText(paybackTextView.getText().toString(), 150.0f, indicatorsPosition + 60.0f,
+                    text);
+
+            document.finishPage(page);
+
+            //Define o nome do arquivo
+            //O nome será composto pelo nome do projeto e uma data e hora em que o arquivo foi gerado
+            //exemplo: PROJETO A-20180218_153945
+
+            //Recupera a data atual
+            String currentTime = new SimpleDateFormat("yyyyMMdd_hhmmss")
+                    .format(Calendar.getInstance().getTime());
+            String targetPdf = projectNameTextView.getText().toString() + "-" + currentTime;
+
+            String filename = "/" + targetPdf + ".pdf";
+
+            File file = new File(getApplicationContext().getFilesDir(), filename);
+            FileOutputStream fos = new FileOutputStream(file);
+            document.writeTo(fos);
+            showToast(getString(R.string.generate_report_success));
+            //Abre o arquivo pdf
+            openPdfFile(file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showToast(getString(R.string.generate_report_fail));
+        }
+    }
+
+    /**
+     * Esse método abre o arquivo pdf
+     *
+     * @param file arquivo pdf
+     */
+    private void openPdfFile(File file) {
+        Intent readerIntent = new Intent(Intent.ACTION_VIEW);
+        readerIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        readerIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        Intent chooserIntent = Intent.createChooser(readerIntent,
+                getString(R.string.open_report_title));
+
+        try {
+            startActivity(chooserIntent);
+        } catch (ActivityNotFoundException ex) {
+            ex.printStackTrace();
+            showToast(getString(R.string.pdf_reader_invalid));
         }
     }
 
@@ -943,6 +1081,20 @@ public class MainActivity extends AppCompatActivity implements
         mToast.show();
     }
 
+    /**
+     * Método que recupera o valor das caixas de texto com informações sobre a taxa de retorno
+     * e transforma em um número que possibilita o cálculo
+     *
+     * @param rateString String contendo a taxa de retorno
+     * @return taxa de retorno para cálculo
+     */
+    private double getRates(String rateString) {
+        int stringRateLength = rateString.length();
+        rateString = rateString.substring(5, stringRateLength - 1);
+        double rate = Double.parseDouble(rateString);
+        return rate / 100;
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
@@ -1038,16 +1190,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Classe que define a ação de clique em um item do menu de navegação
-     */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int postiton, long id) {
-            selectItem(postiton);
-        }
-    }
-
-    /**
      * Define a ação para cada item, dependendo a posicao
      * @param postiton posição da ListView clicada
      */
@@ -1068,5 +1210,15 @@ public class MainActivity extends AppCompatActivity implements
         //Atualiza o item selecionado e fecha a gaveta de navegação
         mDrawerList.setItemChecked(postiton, true);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    /**
+     * Classe que define a ação de clique em um item do menu de navegação
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int postiton, long id) {
+            selectItem(postiton);
+        }
     }
 }
