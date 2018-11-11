@@ -14,6 +14,7 @@ public class CashFlow implements Parcelable {
     //Atributos
     private int period;
     private double cash;
+    private Projeto projeto;
 
     //Métodos especiais
 
@@ -22,7 +23,8 @@ public class CashFlow implements Parcelable {
     /**
      * Construtor da classe CashFlow (vazio)
      */
-    public CashFlow() {
+    public CashFlow(Projeto projeto) {
+        this.projeto = projeto;
     }
 
     /**
@@ -63,7 +65,7 @@ public class CashFlow implements Parcelable {
         parcel.writeDouble(cash);
     }
 
-    protected CashFlow(Parcel in) {
+    private CashFlow(Parcel in) {
         period = in.readInt();
         cash = in.readDouble();
     }
